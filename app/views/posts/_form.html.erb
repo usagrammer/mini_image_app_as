@@ -1,13 +1,22 @@
 <%= form_with model: @post, local: true do |f| %>
 
   <div id="image-previews">
+    <%# ーーーーー変更ここからーーーーー %>
+    <%@post.images.each.with_index do |image, i| %>
+      <div class="image-preview">
+        <%= image_tag image,class:"image-preview__image"%>
+        <div class="image-preview-buttons">
+          <div class="image-edit-button">変更</div>
+          <div class="image-delete-button">削除</div>
+        </div>
+      </div>
+    <%end%>
     <%=f.label :images, "クリックして画像を選択", id:"image-select-button" %>
+    <%# ーーーーー変更ここまでーーーーー %>
   </div>
 
   <%= f.text_field :content, placeholder: 'type a message' %>
-  <%# ーーー変更ここからーーーー %>
   <%= f.file_field :images, direct_upload: true %>
-  <%# ーーー変更ここまでーーーー %>
   <%= f.submit '送信' %>
 
 <% end %>

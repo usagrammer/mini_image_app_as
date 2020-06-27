@@ -23,18 +23,28 @@ document.addEventListener("turbolinks:load", function () {
         // アップロードに成功した時の処理
         console.table(blob);
 
-        // --- 追加ここから ----
-        const newImageFile = document.createElement('input')
-        newImageFile.setAttribute("type", "hidden");
-        newImageFile.setAttribute("value", blob.signed_id);
-        newImageFile.name = "post[new_images][]";
-        document.querySelector('form').appendChild(newImageFile);
-        // --- 追加ここまで ----
+        const newImageFile =
+          `
+          <input type="hidden" name="post[new_images][]" value="${blob.signed_id}">
+        `;
+        const form = document.querySelector('form');
+        form.insertAdjacentHTML("beforeend", newImageFile);
 
         const blobUrl = window.URL.createObjectURL(file); // フォームに入っているファイルのパスを取得する
         console.log(blobUrl);
 
-        const previewHtml = `<img src="${blobUrl}">`;
+        // --- 変更ここから ----
+        const previewHtml =
+          `
+        <div class="image-preview">
+          <img src="${blobUrl}" class="image-preview__image">
+          <div class="image-preview-buttons">
+            <div class="image-edit-button">変更</div>
+            <div class="image-delete-button">削除</div>
+          </div>
+        </div>
+        `;
+        // --- 変更ここまで ----
         imageSelectButton.insertAdjacentHTML("beforebegin", previewHtml);
       }
     })
