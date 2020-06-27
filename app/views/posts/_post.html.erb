@@ -1,0 +1,11 @@
+<div class="post">
+  <div class="post-images">
+    <% post.images.each do |image| %>
+      <%= image_tag image, class: "post-image" %>
+    <% end %>
+  </div>
+  <div class="post-content">
+    <%= post.content %>
+  </div>
+  <%= link_to "編集", edit_post_path(post) %>
+</div>
