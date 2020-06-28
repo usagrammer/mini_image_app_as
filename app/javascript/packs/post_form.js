@@ -36,8 +36,8 @@ document.addEventListener("turbolinks:load", function () {
       // 追加するためのhidden_fieldがない場合、削除するためのhidden_fieldを追加する
       const deleteImageBlobIdElement = // 削除したい画像のidをparamsに送るための要素
         `
-        <input type="hidden" name="post[delete_image_blob_ids][]" value="${blobId}">
-      `;
+          <input type="hidden" name="post[delete_image_blob_ids][]" value="${blobId}">
+        `;
       const form = document.querySelector('form');
       form.insertAdjacentHTML("beforeend", deleteImageBlobIdElement); // deleteImageBlobIdElementをビューに追加
     }
@@ -78,8 +78,8 @@ document.addEventListener("turbolinks:load", function () {
         // アップロードに成功した時の処理
         const newImageFile = // 新しい画像のデータをparamsに送るための要素
           `
-          <input type="hidden" name="post[new_images][]" value="${blob.signed_id}" data-blob-id="${blob.id}">
-        `;
+            <input type="hidden" name="post[new_images][]" value="${blob.signed_id}" data-blob-id="${blob.id}">
+          `;
         const form = document.querySelector('form');
         form.insertAdjacentHTML("beforeend", newImageFile); // フォームに新しい画像のデータをparamsに送るための要素を追加する
 
