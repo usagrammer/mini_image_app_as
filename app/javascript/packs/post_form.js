@@ -18,15 +18,6 @@ document.addEventListener("turbolinks:load", function () {
     imageFileField.click(); // file_fieldをクリックさせる
   };
 
-  imageSelectButton.addEventListener('click', () => { // 画像選択ボタンをクリックした時
-    selectedImageBlobId = -1; // 選択した画像のblob_idをリセットしておく
-  });
-
-  const editButtons = document.querySelectorAll('.image-edit-button'); // 全ての変更ボタンを取得する
-  editButtons.forEach((button) => { // 変更ボタンにイベントを設定していく
-    button.addEventListener('click', clickedEditButton);
-  });
-
   const deleteImage = (blobId) => { // 渡されたblob_idの画像を削除する
     const addImageHidden = document.querySelector(`input[data-blob-id="${blobId}"]`); // 追加するための要素があるか確認
     if (addImageHidden) {
@@ -52,21 +43,7 @@ document.addEventListener("turbolinks:load", function () {
     previewWrapper.remove(); // プレビュー画像とボタンたちの祖先要素を削除する
   }
 
-  const deleteButtons = document.querySelectorAll('.image-delete-button'); // 全ての削除ボタンを取得する
-  deleteButtons.forEach((button) => { // 削除ボタンにイベントを設定していく
-    button.addEventListener('click', clickedDeleteButton);
-  });
-
-  postFormButton.addEventListener('click', (e) => { // 送信ボタンをクリックしたら起動する
-    const previewImageLength = document.querySelectorAll('.image-preview').length; // プレビュー画像の枚数を数える
-    if (previewImageLength < 1 || previewImageLength > 5) { // プレビュー画像が1枚未満、もしくは5枚より多いとき
-      e.preventDefault(); // 送信ボタンの本来の挙動（フォームの送信）をキャンセルする
-      alert("画像は1枚以上5枚以下にしてください。");
-    }
-  });
-
-  imageFileField.addEventListener('change', (e) => { // file_fieldの内容が変化したら起動する
-
+  const imageSelected = (e) => { // file_fieldの内容が変化した時の処理
     const file = e.target.files[0]; // 選択されたファイルがe.target.filesに配列のような状態で入っている
 
     const url = imageFileField.dataset.directUploadUrl; // file_fieldに対して「.dataset.directUploadUrl」を実行する
@@ -118,6 +95,30 @@ document.addEventListener("turbolinks:load", function () {
     })
 
     imageFileField.value = ''; // 送信する必要が無くchangeイベントの邪魔になるのでfile_fieldの中身を消去する
+  }
 
+  imageFileField.addEventListener('change', imageSelected); // file_fieldの内容が変化したら起動する
+
+  const deleteButtons = document.querySelectorAll('.image-delete-button'); // 全ての削除ボタンを取得する
+  deleteButtons.forEach((button) => { // 削除ボタンにイベントを設定していく
+    button.addEventListener('click', clickedDeleteButton);
   });
+
+  const editButtons = document.querySelectorAll('.image-edit-button'); // 全ての変更ボタンを取得する
+  editButtons.forEach((button) => { // 変更ボタンにイベントを設定していく
+    button.addEventListener('click', clickedEditButton);
+  });
+
+  imageSelectButton.addEventListener('click', () => { // 画像選択ボタンをクリックした時
+    selectedImageBlobId = -1; // 選択した画像のblob_idをリセットしておく
+  });
+
+  postFormButton.addEventListener('click', (e) => { // 送信ボタンをクリックしたら起動する
+    const previewImageLength = document.querySelectorAll('.image-preview').length; // プレビュー画像の枚数を数える
+    if (previewImageLength < 1 || previewImageLength > 5) { // プレビュー画像が1枚未満、もしくは5枚より多いとき
+      e.preventDefault(); // 送信ボタンの本来の挙動（フォームの送信）をキャンセルする
+      alert("画像は1枚以上5枚以下にしてください。");
+    }
+  });
+
 });
