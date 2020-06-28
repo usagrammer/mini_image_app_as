@@ -11,7 +11,7 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     if @post.save
-      params[:post][:new_images]&.each_with_index do |image|
+      params[:post][:new_images]&.each do |image|
         @post.images.attach(image)
       end
       redirect_to root_path
@@ -27,11 +27,11 @@ class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
     if @post.update(post_params)
-      params[:post][:new_images]&.each_with_index do |image|
+      params[:post][:new_images]&.each do |image|
         @post.images.attach(image)
       end
       # ーーー追加ここからーーー
-      params[:post][:delete_image_blob_ids]&.each_with_index do |blob_id|
+      params[:post][:delete_image_blob_ids]&.each do |blob_id|
         @post.images.find_by(blob_id: blob_id).purge
       end
       # ーーー追加ここからーーー

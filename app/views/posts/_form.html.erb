@@ -1,4 +1,4 @@
-<%= form_with model: @post, local: true do |f| %>
+<%= form_with model: @post, local: true, id: "post-form" do |f| %>
 
   <div id="image-previews">
     <%@post.images.each.with_index do |image, i| %>
@@ -17,7 +17,7 @@
 
   <%= f.text_field :content, placeholder: 'type a message' %>
   <%= f.file_field :images, direct_upload: true %>
-  <%= f.submit '送信' %>
+  <%= f.submit '送信', id: "post-form-button" %>
 
 <% end %>
 <%= link_to "トップへ戻る", root_path %>
