@@ -2,9 +2,7 @@
 
   <div id="image-previews">
     <%@post.images.each.with_index do |image, i| %>
-      <%# ーーーーー変更ここからーーーーー %>
       <div class="image-preview" data-image-blob-id= <%= image.blob_id %> >
-      <%# ーーーーー変更ここまでーーーーー %>
         <%= image_tag image,class:"image-preview__image" %>
         <div class="image-preview-buttons">
           <div class="image-edit-button">変更</div>
@@ -16,7 +14,9 @@
   </div>
 
   <%= f.text_field :content, placeholder: 'type a message' %>
-  <%= f.file_field :images, direct_upload: true %>
+  <%# ーーーーー変更ここからーーーーー %>
+  <%= f.file_field :images, accept: "image/*", direct_upload: true %>
+  <%# ーーーーー変更ここまでーーーーー %>
   <%= f.submit '送信', id: "post-form-button" %>
 
 <% end %>
