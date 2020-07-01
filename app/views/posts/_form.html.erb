@@ -4,6 +4,7 @@
     <%@post.images.each.with_index do |image, i| %>
       <div class="image-preview" data-image-blob-id= <%= image.blob_id %> >
         <%= image_tag image,class:"image-preview__image" %>
+        <%= f.hidden_field :image_blob_ids, multiple: true, value: image.blob_id, class: "image-blob-ids" %>
         <div class="image-preview-buttons">
           <div class="image-edit-button">変更</div>
           <div class="image-delete-button">削除</div>

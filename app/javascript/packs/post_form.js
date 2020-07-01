@@ -19,19 +19,20 @@ document.addEventListener("turbolinks:load", function () {
   };
 
   const deleteImage = (blobId) => { // 渡されたblob_idの画像を削除する
-    const addImageHidden = document.querySelector(`input[data-blob-id="${blobId}"]`); // 追加するための要素があるか確認
-    if (addImageHidden) {
-      // 追加するためのhidden_fieldがある場合、削除する
-      addImageHidden.remove();
-    } else {
-      // 追加するためのhidden_fieldがない場合、削除するためのhidden_fieldを追加する
-      const deleteImageBlobIdElement = // 削除したい画像のidをparamsに送るための要素
-        `
-          <input type="hidden" name="post[delete_image_blob_ids][]" value="${blobId}">
-        `;
-      const form = document.querySelector('form');
-      form.insertAdjacentHTML("beforeend", deleteImageBlobIdElement); // deleteImageBlobIdElementをビューに追加
-    }
+    const addImageHidden = document.querySelector(`.image-blob-ids[value="${blobId}"]`); // 追加するための要素があるか確認
+    addImageHidden.remove();
+    // if (addImageHidden) {
+    //   // 追加するためのhidden_fieldがある場合、削除する
+    //   addImageHidden.remove();
+    // } else {
+    //   // 追加するためのhidden_fieldがない場合、削除するためのhidden_fieldを追加する
+    //   const deleteImageBlobIdElement = // 削除したい画像のidをparamsに送るための要素
+    //     `
+    //       <input type="hidden" name="post[delete_image_blob_ids][]" value="${blobId}">
+    //     `;
+    //   const form = document.querySelector('form');
+    //   form.insertAdjacentHTML("beforeend", deleteImageBlobIdElement); // deleteImageBlobIdElementをビューに追加
+    // }
   }
 
   const clickedDeleteButton = (e) => { // 削除ボタンをクリックした時に実行される処理
@@ -55,7 +56,7 @@ document.addEventListener("turbolinks:load", function () {
         // アップロードに成功した時の処理
         const newImageFile = // 新しい画像のデータをparamsに送るための要素
           `
-            <input type="hidden" name="post[new_images][]" value="${blob.signed_id}" data-blob-id="${blob.id}">
+            <input type="hidden" name="post[image_blob_ids][]" value="${blob.id}" class="image-blob-ids" >
           `;
         const form = document.querySelector('form');
         form.insertAdjacentHTML("beforeend", newImageFile); // フォームに新しい画像のデータをparamsに送るための要素を追加する

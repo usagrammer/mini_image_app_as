@@ -27,14 +27,15 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
-    if @post.save
-      params[:post][:new_images]&.each do |image|
+    ActiveRecord::Base.transaction do
+      params[:post][:image_blob_ids]&.each do |image|
         @post.images.attach(image)
       end
-      redirect_to root_path
-    else
-      render :new
+      @post.save!
     end
+  rescue
+    @post.images = nil
+    render :new
   end
 
   def edit
@@ -43,19 +44,17 @@ class PostsController < ApplicationController
 
   def update
     @post = Post.find(params[:id])
-    if @post.update(post_params)
-      params[:post][:new_images]&.each do |image|
-        @post.images.attach(image)
+    ActiveRecord::Base.transaction do
+      @post.images.detach
+      params[:post][:image_blob_ids]&.each do |blob_id|
+        blob = ActiveStorage::Blob.unattached.find(blob_id)
+        @post.images.attach(blob)
       end
-      # ーーー追加ここからーーー
-      params[:post][:delete_image_blob_ids]&.each do |blob_id|
-        @post.images.find_by(blob_id: blob_id).purge
-      end
-      # ーーー追加ここからーーー
+      @post.update!(post_params)
       redirect_to root_path
-    else
-      render :edit
     end
+    rescue => e
+      render :edit
   end
 
   private
