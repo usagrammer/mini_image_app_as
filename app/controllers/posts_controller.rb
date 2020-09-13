@@ -28,18 +28,26 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     ActiveRecord::Base.transaction do
-      params[:post][:image_blob_ids]&.each do |image|
-        @post.images.attach(image)
+      params[:post][:image_blob_ids]&.each do |blob_id|
+        blob = ActiveStorage::Blob.find(blob_id)
+        @post.images.attach(blob)
       end
       @post.save!
+      redirect_to root_path, notice: "投稿に成功しました"
     end
-  rescue
-    @post.images = nil
+  rescue => e
+    @images = []
+    params[:post][:image_blob_ids]&.each do |blob_id|
+      blob = ActiveStorage::Blob.find(blob_id)
+      @images << blob
+    end
+    flash.now[:alert] = "投稿に失敗しました。#{e.message}"
     render :new
   end
 
   def edit
     @post = Post.find(params[:id])
+    @images = @post.images.blobs
   end
 
   def update
@@ -47,13 +55,19 @@ class PostsController < ApplicationController
     ActiveRecord::Base.transaction do
       @post.images.detach
       params[:post][:image_blob_ids]&.each do |blob_id|
-        blob = ActiveStorage::Blob.unattached.find(blob_id)
+        blob = ActiveStorage::Blob.find(blob_id)
         @post.images.attach(blob)
       end
       @post.update!(post_params)
       redirect_to root_path
     end
     rescue => e
+      @images = []
+      params[:post][:image_blob_ids]&.each do |blob_id|
+        blob = ActiveStorage::Blob.find(blob_id)
+        @images << blob
+      end
+      flash.now[:alert] = "投稿に失敗しました。#{e.message}"
       render :edit
   end
 
