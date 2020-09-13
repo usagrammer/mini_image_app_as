@@ -1,0 +1,24 @@
+<%= form_with model: @post, local: true, id: "post-form" do |f| %>
+
+  <div id="image-previews">
+    <% @images&.each do |image| %>
+      <div class="image-preview" data-image-blob-id= <%= image.id %> >
+        <%= image_tag image,class:"image-preview__image" %>
+        <%= f.hidden_field :image_blob_ids, multiple: true, value: image.id, class: "image-blob-ids" %>
+        <div class="image-preview-buttons">
+          <div class="image-edit-button">変更</div>
+          <div class="image-delete-button">削除</div>
+        </div>
+      </div>
+    <%end%>
+    <%=f.label :images, "クリックして画像を選択", id:"image-select-button" %>
+  </div>
+
+  <%= f.text_field :content, placeholder: 'type a message' %>
+  <%# ーーーーー変更ここからーーーーー %>
+  <%= f.file_field :images, accept: "image/*", direct_upload: true %>
+  <%# ーーーーー変更ここまでーーーーー %>
+  <%= f.submit '送信', id: "post-form-button" %>
+
+<% end %>
+<%= link_to "トップへ戻る", root_path %>
